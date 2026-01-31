@@ -19,6 +19,17 @@ const isCheckoutPage = computed<boolean>(() => name === 'order-received');
 const orderIsNotCompleted = computed<boolean>(() => order.value?.status !== OrderStatusEnum.COMPLETED);
 const hasDiscount = computed<boolean>(() => !!parseFloat(order.value?.rawDiscountTotal || '0'));
 const downloadableItems = computed(() => order.value?.downloadableItems?.nodes || []);
+const repairPhotos = computed(() => {
+  const ord = order.value as any;
+  if (!ord?.metaData) return [];
+  return ord.metaData
+    .filter((meta: any) => meta.key && meta.key.startsWith('Foto') && meta.value)
+    .map((meta: any) => meta.value);
+});
+const isPreventivoOrder = computed(() => {
+  if (!order.value?.lineItems?.nodes) return false;
+  return order.value.lineItems.nodes.some((item: any) => item.product?.node?.slug === 'preventivo');
+});
 
 onBeforeMount(() => {
   /**
@@ -100,7 +111,9 @@ useSeoMeta({
         </template>
         <template v-else-if="isCheckoutPage">
           <div class="flex items-center justify-between w-full mb-2">
-            <h1 class="text-xl font-semibold text-gray-900 dark:text-white">{{ $t('shop.orderReceived') }}</h1>
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-white">
+              {{ isPreventivoOrder ? 'Richiesta ricevuta' : $t('shop.orderReceived') }}
+            </h1>
             <button
               v-if="orderIsNotCompleted"
               type="button"
@@ -111,7 +124,10 @@ useSeoMeta({
               <Icon name="ion:refresh-outline" />
             </button>
           </div>
-          <p class="text-gray-600 dark:text-gray-400">{{ $t('shop.orderThanks') }}</p>
+          <p v-if="isPreventivoOrder" class="text-gray-600 dark:text-gray-400">
+            Grazie per la tua richiesta di preventivo. Ti invieremo un'email con i dettagli.
+          </p>
+          <p v-else class="text-gray-600 dark:text-gray-400">{{ $t('shop.orderThanks') }}</p>
         </template>
         <hr class="my-8 border-gray-200 dark:border-gray-700" />
       </div>
@@ -158,6 +174,17 @@ useSeoMeta({
             </div>
           </div>
         </template>
+
+        <div v-if="repairPhotos.length" class="mt-8 border-t pt-6 border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Foto della Riparazione</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div v-for="(photo, i) in repairPhotos" :key="i" class="relative group rounded-lg overflow-hidden border border-gray-200 shadow-sm aspect-square">
+              <a :href="photo" target="_blank">
+                <img :src="photo" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="Foto riparazione" />
+              </a>
+            </div>
+          </div>
+        </div>
 
         <hr class="my-8 border-gray-200 dark:border-gray-700" />
 

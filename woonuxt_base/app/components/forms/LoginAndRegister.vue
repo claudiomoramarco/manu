@@ -180,8 +180,8 @@ const inputPlaceholder = computed(() => {
 });
 </script>
 
-<style scoped>
-@reference "#tailwind";
+<style lang="postcss" scoped>
+@import "tailwindcss";
 
 input[type='text'] {
   @apply border rounded-lg mb-4 w-full p-3 px-4 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white;

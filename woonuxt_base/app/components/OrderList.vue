@@ -52,8 +52,8 @@ const goToOrder = (orderNumber?: string | null): void => {
   </div>
 </template>
 
-<style scoped>
-@reference "#tailwind";
+<style lang="postcss" scoped>
+@import "tailwindcss";
 
 tbody tr:nth-child(odd) {
   @apply bg-gray-50 dark:bg-gray-700/50;

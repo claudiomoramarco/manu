@@ -22,15 +22,14 @@ export default defineNuxtConfig({
 
   components: [{ path: resolve('./app/components'), pathPrefix: false }],
 
-  modules: [resolve('./modules/woonuxt-bridge.ts'), 'nuxt-graphql-client', '@nuxt/icon', '@nuxt/image', '@nuxtjs/i18n', '@nuxtjs/color-mode'],
-
-  postcss: {
-    plugins: {
-      '@tailwindcss/postcss': {},
-    },
-  },
-
-  css: [resolve('./app/assets/css/main.css')],
+  modules: [
+    resolve('./modules/woonuxt-bridge.ts'),
+    'nuxt-graphql-client',
+    '@nuxt/icon',
+    '@nuxt/image',
+    '@nuxtjs/i18n',
+    '@nuxtjs/color-mode',
+  ],
 
   runtimeConfig: {
     public: {
